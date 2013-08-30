@@ -1,7 +1,114 @@
 = less_ga
 
-Access google analytic data from your ruby app
+Access google analytic data from your ruby app.
 
+Handles authentication.
+Transparent reauthorization.
+A few queries are built in, feel free to fork to add your own. Feel free to pull request any changes.
+
+== Install
+  
+  gem "less_ga", git: "git@github.com:LessEverything/less_ga.git"
+
+== Usage
+
+  # 1. Create an instance of Less::Ga::Sb
+  
+  
+  def less_ga
+    # App is some settings class
+    # ga_client_id you get by registering your app with google
+    @less_ga ||= Less::Ga::Sb.new client_id: App.ga_client_id,
+      # ga_client_secret you get by registering your app with google
+      client_secret: App.ga_client_secret,
+      # oauth2callback_url explained below
+      auth_callback_url: oauth2callback_url, 
+      # your_object is some object where you're storing google vars on a per user basis
+      # It can just as easily be a settings class for global access
+      # google_analytics_code is the UA-XXXXXX-1 code the user gets from google analytics
+      webproperty: your_object.google_analytics_code, 
+      # gauth_access_token is returned once user is authed. It should be nil if not authed yet.
+      access_token: your_object.gauth_access_token, 
+      # gauth_refresh_token is returned once user is authed. It should be nil if not authed yet.
+      refresh_token: your_object.gauth_refresh_token, 
+      # google_analytics_code this is the same at webproperty. I guess I need to refactor.
+      google_analytics_code: your_object.google_analytics_code,
+      # ga_profile_id The hierarchy goes like this: A goog user->Accounts->Profiles. 
+      # You can only get data from one profile at a time.
+      profile_id: your_object.ga_profile_id,
+      # refresh_callback is a lambda to store the access_token, when a reauthentication is performed.
+      refresh_callback: ->(access_token){your_object.update_attribute :gauth_access_token, access_token}
+  end
+  
+  # 2. Have a controller action that google will call after a user has been authenticated (or not)
+  # The url to this action is passed as a string param in step 1.
+  
+   
+  def oauth2callback
+    begin
+      # Takes the data that goog's oauth and turns it into
+      # data you can use
+      auth_hash = less_ga.auth.handle_callback params
+      # Store that hash data for later user. (Hash explained below.)
+      your_object.update_attributes auth_hash
+    rescue Less::Ga::Auth::AccessDeniedError => e
+      # An error happened during reauth or data querying.
+      # Handle it.
+    rescue Signet::AuthorizationError =>e
+      # A user clicked cancel in Google's OAuth.
+      # You can ignore this or handle it.
+    end
+    # Where do you want to go now?
+    redirect_to somewhere_path
+  end
+  
+  # 3. Do something with the authenticated hash
+  # This is the hash that's returned in the oauth2callback. 
+  # Store this data and supply the access_token and refresh_token 
+  # in step one.
+  
+  {
+  :access_token => "",
+  :refresh_token => "",
+  :expires_in => "",
+  :issued_at => ""
+  }
+  
+  # 4. Get Account and Profile
+  # A Google user may have several "accounts" per domain.
+  # Each of these "accounts" may have several "profiles."
+  # Since you can only run queries against one profile at a time
+  # You have to check the accounts and if there's more than one, 
+  # have the user select one.
+  # Then you'll have to check the profiles and if there's more than one
+  # have the user select one.
+  
+  # Returns a list of accounts
+  less_ga.data.accounts
+  # You can get a count of account
+  less_ga.data.accounts[:items].size
+  # Get the id of the first one
+  less_ga.data.accounts[:items][0][:id]
+  
+  # Return a list of profiles for one account
+  # you need the account_id
+  less_ga.data.profiles account_id
+  # Get the number of profiles
+  less_ga.data.profiles( account_id)[:items].size
+  # Get the id for the first one
+  less_ga.data.profiles( account_id)[:items][0][:id]
+  
+  
+  # 5. Run some reports
+  # All reports return a hash of data from ga.
+  # There are a few reports built it. You can add your own.
+  
+  less_ga.data.inbound
+  less_ga.data.sources
+  less_ga.data.cities
+  
+  # 6. Send me hugs and kisses
+  
 == Contributing to less_ga
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
