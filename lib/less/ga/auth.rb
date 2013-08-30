@@ -20,7 +20,7 @@ class Less::Ga::Auth
       end
   
       def handle_callback params
-        raise GaAuth::AccessDeniedError if params[:error] == "access_denied"
+        raise AccessDeniedError if params[:error] == "access_denied"
         user_credentials.code = params[:code]
         user_credentials.fetch_access_token!.with_indifferent_access
       end
