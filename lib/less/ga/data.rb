@@ -88,7 +88,7 @@ class Less::Ga::Data
       def hit_api_directly url
         "GaData.hit_api_directly: #{url}".log
         h = ::HTTParty.get final_url(url)
-        o = h.parsed_response.respond_to? :with_indifferent_access ? h.parsed_response.with_indifferent_access : h.parsed_response
+        o = h.parsed_response.respond_to?( :with_indifferent_access ) ? h.parsed_response.with_indifferent_access : h.parsed_response
         "Exiting GaData.hit_api_directly".log
         o
       end
