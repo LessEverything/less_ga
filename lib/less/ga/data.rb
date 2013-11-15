@@ -77,7 +77,7 @@ class Less::Ga::Data
   
       def hit_api url
         res = hit_api_directly url
-        if res[:error] && res[:error][:code] == 401
+        if (res[:error] && res[:error][:code] == 401) || (res["error"] && res["error"]["code"] == 401)
           if ga.reauth
             res = hit_api_directly url
           end
