@@ -8,7 +8,18 @@ class Less::Ga::Sb
   # @param [String] client_secret    The client_secret supplied to your app while registering your app with google
   # @param [String] webproperty   Optional. The id for the analytics you're going after. Can be found using the webproperties method
   # @param [String] scope    Optional. Defaults to 'https://www.googleapis.com/auth/analytics.readonly'
-  def initialize(client_id: "", client_secret: "", webproperty: nil, scope: "https://www.googleapis.com/auth/analytics.readonly", auth_callback_url: "", access_token: "", google_analytics_code: "", refresh_token: "", profile_id: "", refresh_callback: nil)
+  def initialize(
+    client_id: "", 
+    client_secret: "", 
+    webproperty: nil, 
+    scope: "https://www.googleapis.com/auth/analytics.readonly", 
+    auth_callback_url: "", 
+    access_token: "", 
+    google_analytics_code: "", 
+    refresh_token: "", 
+    profile_id: "", 
+    refresh_callback: nil
+    )
     self.client_id         = client_id
     self.client_secret     = client_secret
     self.webproperty       = webproperty

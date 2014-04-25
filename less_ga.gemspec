@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{less_ga}
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Steven Bristol"]
@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
     "lib/less_ga.rb",
     "lib/less/ga/auth.rb",
     "lib/less/ga/data.rb",
-    "test/interaction_test.rb",
     "test/test_helper.rb"
   ]
   s.homepage = %q{http://github.com/LessEverything/less_ga}
@@ -37,8 +36,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.4.2}
   s.summary = %q{Access google analytic data from your ruby app.}
 
-  s.add_runtime_dependency(%q<faraday>, "0.8.8")
-  s.add_runtime_dependency(%q<google-api-client>, ["0.6.3"])
+  s.add_runtime_dependency(%q<faraday>, "0.9.0")
+  s.add_runtime_dependency(%q<google-api-client>, ["0.7.1"])
   s.add_runtime_dependency(%q<httparty>, "0.11.0")
   # if s.respond_to? :specification_version then
   #   s.specification_version = 3

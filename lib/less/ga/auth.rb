@@ -43,7 +43,7 @@ class Less::Ga::Auth
   
       def client
         return @client if @client
-        client = Google::APIClient.new
+        client = Google::APIClient.new(  :application_name => 'Example Ruby application',  :application_version => '1.0.0')
         client.authorization.client_id = ga.client_id
         client.authorization.client_secret = ga.client_secret
         client.authorization.scope = @scope
