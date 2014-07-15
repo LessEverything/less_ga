@@ -55,6 +55,8 @@ class Less::Ga::Auth
           auth = client.authorization.dup
           auth.redirect_uri = ga.auth_callback_url
           auth.update_token!(token_hash)
+          #auth.authorization_uri(approval_prompt: :force, access_type: :offline)
+          #auth.grant_type = "authorization_code"
           auth
         )
       end
