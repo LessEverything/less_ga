@@ -28,12 +28,12 @@ class Less::Ga::Auth
       def reauthorize
         #{"access_token"=>"ya29.AHES6ZSesJMBes2nCdNSKNzuiuOddSqdssRUNt7HyCChBDzXPtpbpsM", "token_type"=>"Bearer", "expires_in"=>3600}
         #{"error"=>{"errors"=>[{"domain"=>"global", "reason"=>"required", "message"=>"Login Required", "locationType"=>"header", "location"=>"Authorization"}], "code"=>401, "message"=>"Login Required"}}
-        "reauthorizing".log
+        #"reauthorizing".log
         h = {}
         h[:access_token] = ga.access_token
         h[:refresh_token] = ga.refresh_token
         u = user_credentials h
-        u.refresh!.with_indifferent_access.log
+        u.refresh!.with_indifferent_access
       end
   
   
@@ -55,8 +55,12 @@ class Less::Ga::Auth
           auth = client.authorization.dup
           auth.redirect_uri = ga.auth_callback_url
           auth.update_token!(token_hash)
-          #auth.authorization_uri(approval_prompt: :force, access_type: :offline)
-          #auth.grant_type = "authorization_code"
+          if token_hash.blank?
+            auth.authorization_uri(approval_prompt: :force, access_type: :offline)
+            auth.grant_type = "authorization_code"
+          else
+            auth.grant_type = "refresh_token"
+          end
           auth
         )
       end
