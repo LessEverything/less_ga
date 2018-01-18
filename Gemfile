@@ -8,6 +8,7 @@ group :development do
   gem "rdoc", "~> 6.0"
   gem "bundler", "~> 1.15.1"
   gem "jeweler", "~> 1.8.3"
+  gem "nokogiri", "~> 1.8.1"
   #gem "rcov", ">= 0"
 
   gem "guard", ">= 0"
